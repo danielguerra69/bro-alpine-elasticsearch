@@ -17,6 +17,7 @@ WORKDIR /data/logs
 RUN sed -i "s/127.0.0.1/elasticsearch/g" /usr/local/share/bro/plugins/Bro_ElasticSearch/scripts/init.bro
 # enable elasticsearch
 RUN echo "@load plugins/Bro_ElasticSearch/scripts/init" >> /usr/local/share/bro/base/init-default.bro
+RUN echo "@load plugins/Bro_ElasticSearch/scripts/Bro/ElasticSearch/logs-to-elasticsearch" >> /usr/local/share/bro/base/init-default.bro
 # stop local logging
 RUN sed -i "s/default_writer = WRITER_ASCII/default_writer = WRITER_NONE/g" /usr/local/share/bro/base/frameworks/logging/main.bro
 # set the json separator to _
