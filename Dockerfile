@@ -7,7 +7,8 @@ RUN echo "===> Adding dependencies..." && \
     rm -rf /var/cache/apk/*
 # add precompiled bro
 ADD bro.tar.gz /
-
+# add logs to elasticsearch filte
+ADD logs-to-elasticsearch.bro /usr/local/share/bro/plugins/Bro_ElasticSearch/scripts/Bro/ElasticSearch/logs-to-elasticsearch.bro
 RUN mv /usr/local/lib/bro/plugins /usr/local/share/bro
 # set volume
 VOLUME ["/data/logs", "/data/config","/data/pcap"]
