@@ -14,7 +14,7 @@ VOLUME ["/data/logs", "/data/config","/data/pcap"]
 # set workdir
 WORKDIR /data/logs
 # set elasticsearch server
-RUN sed -i "s/127.0.0.1/elasticsearch/g" /usr/local/lib/bro/plugins/Bro_ElasticSearch/scripts/init.bro
+RUN sed -i "s/127.0.0.1/elasticsearch/g" /usr/local/share/bro/plugins/Bro_ElasticSearch/scripts/init.bro
 # enable elasticsearch
 RUN echo "@load plugins/Bro_ElasticSearch/scripts/init" >> /usr/local/share/bro/base/init-default.bro
 # stop local logging
