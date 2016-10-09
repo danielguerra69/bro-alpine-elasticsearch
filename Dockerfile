@@ -7,6 +7,8 @@ RUN echo "===> Adding dependencies..." && \
     rm -rf /var/cache/apk/*
 # add precompiled bro
 ADD bro.tar.gz /
+
+RUN mv /usr/local/lib/bro/plugins /usr/local/share/bro
 # set volume
 VOLUME ["/data/logs", "/data/config","/data/pcap"]
 # set workdir
@@ -14,7 +16,7 @@ WORKDIR /data/logs
 # set elasticsearch server
 RUN sed -i "s/127.0.0.1/elasticsearch/g" /usr/local/lib/bro/plugins/Bro_ElasticSearch/scripts/init.bro
 # enable elasticsearch
-RUN echo "@load Bro_ElasticSearch/logs-to-elasticsearch.bro" >> /usr/local/share/bro/base/init-default.bro
+RUN echo "@load plugins/Bro_ElasticSearch/scripts/init" >> /usr/local/share/bro/base/init-default.bro
 # stop local logging
 RUN sed -i "s/default_writer = WRITER_ASCII/default_writer = WRITER_NONE/g" /usr/local/share/bro/base/frameworks/logging/main.bro
 # set the json separator to _
