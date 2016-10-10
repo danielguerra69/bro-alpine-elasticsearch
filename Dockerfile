@@ -8,7 +8,7 @@ RUN echo "===> Adding dependencies..." && \
 # add precompiled bro
 ADD bro.tar.gz /
 # add logs to elasticsearch filte
-ADD logs-to-elasticsearch.bro /usr/local/lib/bro/plugins/Bro_ElasticSearch//scripts/Bro/ElasticSearch/logs-to-elasticsearch
+ADD logs-to-elasticsearch.bro /usr/local/lib/bro/plugins/Bro_ElasticSearch/scripts/Bro/ElasticSearch/logs-to-elasticsearch.bro
 # set volume
 VOLUME ["/data/logs", "/data/config","/data/pcap"]
 # set workdir
