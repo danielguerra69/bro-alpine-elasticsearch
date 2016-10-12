@@ -1,6 +1,6 @@
-# Compose Bro-debian-elasicsearch cluster
-# set DOCKERHOST with export DOCKERHOST=192.168.1.2
+# Compose Bro-alpine-elasicsearch cluster
 #
+
 # VOLUMES
 elastic-data-master:
  image: tianon/true
@@ -16,10 +16,8 @@ elastic-data-node02:
  image: tianon/true
  volumes:
     - /usr/share/elasticsearch/data
-#
 
-#
-# ELASTICSEARCH
+# ELASTICSEARCH nodes
 elasticsearch-master:
  image: danielguerra/alpine-elasticsearch
  command: -Des.network.bind_host=elasticsearch-master --cluster.name=bro --node.name=elasticsearch-master --discovery.zen.ping.multicast.enabled=false --network.host=elasticsearch-master
@@ -48,7 +46,6 @@ elasticsearch-node02:
  volumes_from:
    - "elastic-data-node02"
 
-#
 # KIBANA
 kibana:
  image: kibana
@@ -58,14 +55,13 @@ kibana:
  links:
   - "elasticsearch-master:elasticsearch"
 
-#
 # BRO
 bro:
  image: danielguerra/bro-alpine-elasticsearch
  hostname: bro
  links:
   - "elasticsearch-master:elasticsearch"
-  volumes:
+ volumes:
   - "/pcap:/data/pcap"
 
 # kibana config
