@@ -2,7 +2,7 @@
 
 ### About
 
-Bro (git) on alpine linux with elasticsearch 2+ plugin.
+Bro-2.5 (git) on alpine linux with elasticsearch 2+ plugin.
 It was build with danielguerra/alpine-bro-build.
 The extracted size is 27M.
 

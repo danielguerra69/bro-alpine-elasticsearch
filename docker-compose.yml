@@ -17,6 +17,11 @@ elastic-data-node02:
  volumes:
     - /usr/share/elasticsearch/data
 
+pcap-data:
+  image: tianon/true
+  volumes:
+    - /data/pcap
+
 # ELASTICSEARCH nodes
 elasticsearch-master:
  image: danielguerra/alpine-elasticsearch
@@ -24,9 +29,6 @@ elasticsearch-master:
  hostname: elasticsearch-master
  volumes_from:
    - "elastic-data-master"
- ports:
-   - "9200:9200"
-   - "9300:9300"
 
 elasticsearch-node01:
  image: danielguerra/alpine-elasticsearch
@@ -46,26 +48,37 @@ elasticsearch-node02:
  volumes_from:
    - "elastic-data-node02"
 
+nginx:
+  image: danielguerra/bro-elasticsearch-nginx
+  hostname: nginx
+  links:
+   - "elasticsearch-master:master"
+   - "elasticsearch-node01:node01"
+   - "elasticsearch-node02:node02"
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+
 # KIBANA
 kibana:
- image: kibana
+ image: danielguerra/alpine-kibana
  hostname: kibana
  ports:
   - "5601:5601"
  links:
-  - "elasticsearch-master:elasticsearch"
+  - "nginx:elasticsearch"
 
 # BRO
 bro:
  image: danielguerra/bro-alpine-elasticsearch
  hostname: bro
  links:
-  - "elasticsearch-master:elasticsearch"
- volumes:
-  - "/pcap:/data/pcap"
+  - "nginx:elasticsearch"
+ volumes_from:
+  - "pcap-data"
 
 # kibana config
-kibana-config:
- image: danielguerra/bro-kibana-config
- links:
-  - "elasticsearch-master:elasticsearch"
+#kibana-config:
+# image: danielguerra/bro-kibana-config
+# links:
+#  - "elasticsearch-master:elasticsearch"
