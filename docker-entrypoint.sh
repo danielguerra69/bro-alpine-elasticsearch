@@ -1,29 +1,29 @@
 #!/bin/sh
-until curl -XGET elasticsearch:9200/; do
+until curl -u elastic:changeme -XGET elasticsearch:9200/; do
   >&2 echo "Failed to configure Elasticsearch, it's unavailable - sleeping 5s"
   sleep 5
 done
 
 >&2 echo "Elasticsearch is up - Set bro mapping"
-curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
+curl -u elastic:changeme -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
   "template": "bro-*",
     "index": {
-      "number_of_shards": 7,
+      "number_of_shards": 3,
       "number_of_replicas": 1
     },
     "mappings" : {
       "http" : {
         "properties" : {
           "status_msg" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "user_agent" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "uri" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }
@@ -41,7 +41,7 @@ curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
       "files" : {
         "properties" : {
           "mime_type" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }
@@ -56,7 +56,7 @@ curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
       "notice" : {
         "properties" : {
           "note" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }
@@ -64,11 +64,11 @@ curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
       "ssl" : {
         "properties" : {
           "validation_status" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "server_name" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }
@@ -76,11 +76,11 @@ curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
       "dns" : {
         "properties" : {
           "answers" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "query" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }
@@ -88,15 +88,15 @@ curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
       "intel" : {
         "properties" : {
           "sources" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "seen_indicator_type" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "seen_where" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }
@@ -104,11 +104,11 @@ curl -XPUT elasticsearch:9200/_template/fixstrings_bro -d '{
       "weird" : {
         "properties" : {
           "name" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           },
           "query" : {
-            "type" : "string",
+            "type" : "text",
             "index" : "not_analyzed"
           }
         }

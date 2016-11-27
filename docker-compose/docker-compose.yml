@@ -1,0 +1,84 @@
+# Compose Bro-alpine-elasicsearch cluster
+#
+
+# VOLUMES
+elastic-data-master:
+ image: tianon/true
+ volumes:
+    - /usr/share/elasticsearch/data
+
+elastic-data-node01:
+ image: tianon/true
+ volumes:
+    - /usr/share/elasticsearch/data
+
+elastic-data-node02:
+ image: tianon/true
+ volumes:
+    - /usr/share/elasticsearch/data
+
+pcap-data:
+  image: tianon/true
+  volumes:
+    - /data/pcap
+
+# ELASTICSEARCH nodes
+elasticsearch-master:
+ image: danielguerra/elasticsearch-x-pack
+ command: -E cluster.name=bro -E node.name=elasticsearch-master -E discovery.zen.ping.multicast.enabled=false -E network.host=elasticsearch-master
+ hostname: elasticsearch-master
+ volumes_from:
+   - "elastic-data-master"
+
+elasticsearch-node01:
+ image: danielguerra/elasticsearch-x-pack
+ command: -E cluster.name=bro -E node.name=elasticsearch-node01 -E discovery.zen.ping.unicast.hosts=master:9300  -E network.host=elasticsearch-node01
+ hostname: elasticsearch-node01
+ links:
+  - "elasticsearch-master:master"
+ volumes_from:
+   - "elastic-data-node01"
+
+elasticsearch-node02:
+ image: danielguerra/elasticsearch-x-pack
+ command: -E cluster.name=bro -E node.name=elasticsearch-node02 -E discovery.zen.ping.unicast.hosts=master:9300  -E network.host=elasticsearch-node02
+ hostname: elasticsearch-node02
+ links:
+  - "elasticsearch-master:master"
+ volumes_from:
+   - "elastic-data-node02"
+
+nginx:
+  image: danielguerra/bro-elasticsearch-nginx
+  hostname: nginx
+  links:
+   - "elasticsearch-master:master"
+   - "elasticsearch-node01:node01"
+   - "elasticsearch-node02:node02"
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+
+# KIBANA
+kibana:
+ image: danielguerra/kibana-x-pack
+ hostname: kibana
+ ports:
+  - "5601:5601"
+ links:
+  - "nginx:elasticsearch"
+
+# BRO
+bro:
+ image: danielguerra/bro-alpine-elasticsearch:x-pack
+ hostname: bro
+ links:
+  - "nginx:elasticsearch"
+ volumes_from:
+  - "pcap-data"
+
+# kibana config
+#kibana-config:
+# image: danielguerra/bro-kibana-config
+# links:
+#  - "elasticsearch-master:elasticsearch"

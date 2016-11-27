@@ -17,7 +17,7 @@ VOLUME ["/data/logs", "/data/config","/data/pcap"]
 # set workdir
 WORKDIR /data/logs
 # set elasticsearch server for link
-RUN sed -i "s/127.0.0.1/elasticsearch/g" $PLUGINS/Bro_ElasticSearch/scripts/init.bro
+RUN sed -i "s/127.0.0.1/elastic:changeme@elasticsearch/g" $PLUGINS/Bro_ElasticSearch/scripts/init.bro
 # increase transfer timeout to 60s
 RUN sed -i "s/const transfer_timeout = 2secs/const transfer_timeout = 60secs/" $PLUGINS/Bro_ElasticSearch/scripts/init.bro
 # enable elasticsearch
